@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,61 +15,61 @@ import java.util.Objects;
 @Document(collection = "some_entity")
 public class SomeEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
+  @Id
+  private String id;
 
-    @NotNull
-    @Field("name")
-    private String name;
+  @NotNull
+  @Field("name")
+  private String name;
 
-    public String getId() {
-        return id;
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public SomeEntity name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setId(String id) {
-        this.id = id;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    public String getName() {
-        return name;
+    SomeEntity someEntity = (SomeEntity) o;
+    if (someEntity.id == null || id == null) {
+      return false;
     }
+    return Objects.equals(id, someEntity.id);
+  }
 
-    public SomeEntity name(String name) {
-        this.name = name;
-        return this;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        SomeEntity someEntity = (SomeEntity) o;
-        if (someEntity.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, someEntity.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "SomeEntity{" +
-            "id=" + id +
-            ", name='" + name + "'" +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return "SomeEntity{" +
+      "id=" + id +
+      ", name='" + name + "'" +
+      '}';
+  }
 }

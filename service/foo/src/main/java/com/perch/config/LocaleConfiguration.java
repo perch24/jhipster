@@ -1,7 +1,6 @@
 package com.perch.config;
 
 import com.perch.config.locale.AngularCookieLocaleResolver;
-
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -15,25 +14,25 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 @Configuration
 public class LocaleConfiguration extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
-    @SuppressWarnings("unused")
-    private RelaxedPropertyResolver propertyResolver;
+  @SuppressWarnings("unused")
+  private RelaxedPropertyResolver propertyResolver;
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.messages.");
-    }
+  @Override
+  public void setEnvironment(Environment environment) {
+    this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.messages.");
+  }
 
-    @Bean(name = "localeResolver")
-    public LocaleResolver localeResolver() {
-        AngularCookieLocaleResolver cookieLocaleResolver = new AngularCookieLocaleResolver();
-        cookieLocaleResolver.setCookieName("NG_TRANSLATE_LANG_KEY");
-        return cookieLocaleResolver;
-    }
+  @Bean(name = "localeResolver")
+  public LocaleResolver localeResolver() {
+    AngularCookieLocaleResolver cookieLocaleResolver = new AngularCookieLocaleResolver();
+    cookieLocaleResolver.setCookieName("NG_TRANSLATE_LANG_KEY");
+    return cookieLocaleResolver;
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("language");
-        registry.addInterceptor(localeChangeInterceptor);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+    localeChangeInterceptor.setParamName("language");
+    registry.addInterceptor(localeChangeInterceptor);
+  }
 }

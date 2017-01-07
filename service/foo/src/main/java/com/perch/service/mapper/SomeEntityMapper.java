@@ -1,9 +1,9 @@
 package com.perch.service.mapper;
 
-import com.perch.domain.*;
+import com.perch.domain.SomeEntity;
 import com.perch.service.dto.SomeEntityDTO;
+import org.mapstruct.Mapper;
 
-import org.mapstruct.*;
 import java.util.List;
 
 /**
@@ -12,11 +12,11 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {})
 public interface SomeEntityMapper {
 
-    SomeEntityDTO someEntityToSomeEntityDTO(SomeEntity someEntity);
+  SomeEntityDTO someEntityToSomeEntityDTO(SomeEntity someEntity);
 
-    List<SomeEntityDTO> someEntitiesToSomeEntityDTOs(List<SomeEntity> someEntities);
+  List<SomeEntityDTO> someEntitiesToSomeEntityDTOs(List<SomeEntity> someEntities);
 
-    SomeEntity someEntityDTOToSomeEntity(SomeEntityDTO someEntityDTO);
+  SomeEntity someEntityDTOToSomeEntity(SomeEntityDTO someEntityDTO);
 
-    List<SomeEntity> someEntityDTOsToSomeEntities(List<SomeEntityDTO> someEntityDTOs);
+  List<SomeEntity> someEntityDTOsToSomeEntities(List<SomeEntityDTO> someEntityDTOs);
 }

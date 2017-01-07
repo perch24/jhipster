@@ -1,9 +1,9 @@
 package com.perch.config.apidoc;
 
-import com.perch.config.Constants;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Function;
+import com.perch.config.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -29,59 +29,59 @@ import static springfox.documentation.spi.schema.contexts.ModelContext.inputPara
 @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
 @Profile(Constants.SPRING_PROFILE_SWAGGER)
 public class PageableParameterBuilderPlugin implements ParameterBuilderPlugin {
-    private final TypeNameExtractor nameExtractor;
-    private final TypeResolver resolver;
+  private final TypeNameExtractor nameExtractor;
+  private final TypeResolver resolver;
 
-    @Autowired
-    public PageableParameterBuilderPlugin(TypeNameExtractor nameExtractor, TypeResolver resolver) {
-        this.nameExtractor = nameExtractor;
-        this.resolver = resolver;
+  @Autowired
+  public PageableParameterBuilderPlugin(TypeNameExtractor nameExtractor, TypeResolver resolver) {
+    this.nameExtractor = nameExtractor;
+    this.resolver = resolver;
+  }
+
+  @Override
+  public boolean supports(DocumentationType delimiter) {
+    return true;
+  }
+
+  private Function<ResolvedType, ? extends ModelReference>
+  createModelRefFactory(ParameterContext context) {
+    ModelContext modelContext = inputParam(context.resolvedMethodParameter().getParameterType(),
+      context.getDocumentationType(),
+      context.getAlternateTypeProvider(),
+      context.getGenericNamingStrategy(),
+      context.getIgnorableParameterTypes());
+    return modelRefFactory(modelContext, nameExtractor);
+  }
+
+  @Override
+  public void apply(ParameterContext context) {
+    ResolvedMethodParameter parameter = context.resolvedMethodParameter();
+    Class<?> type = parameter.getParameterType().getErasedType();
+    if (type != null && Pageable.class.isAssignableFrom(type)) {
+      Function<ResolvedType, ? extends ModelReference> factory =
+        createModelRefFactory(context);
+
+      ModelReference intModel = factory.apply(resolver.resolve(Integer.TYPE));
+      ModelReference stringModel = factory.apply(resolver.resolve(List.class, String.class));
+
+      List<Parameter> parameters = newArrayList(
+        context.parameterBuilder()
+          .parameterType("query").name("page").modelRef(intModel)
+          .description("Page number of the requested page")
+          .build(),
+        context.parameterBuilder()
+          .parameterType("query").name("size").modelRef(intModel)
+          .description("Size of a page")
+          .build(),
+        context.parameterBuilder()
+          .parameterType("query").name("sort").modelRef(stringModel).allowMultiple(true)
+          .description("Sorting criteria in the format: property(,asc|desc). "
+            + "Default sort order is ascending. "
+            + "Multiple sort criteria are supported.")
+          .build());
+
+      context.getOperationContext().operationBuilder().parameters(parameters);
     }
-
-    @Override
-    public boolean supports(DocumentationType delimiter) {
-        return true;
-    }
-
-    private Function<ResolvedType, ? extends ModelReference>
-    createModelRefFactory(ParameterContext context) {
-        ModelContext modelContext = inputParam(context.resolvedMethodParameter().getParameterType(),
-            context.getDocumentationType(),
-            context.getAlternateTypeProvider(),
-            context.getGenericNamingStrategy(),
-            context.getIgnorableParameterTypes());
-        return modelRefFactory(modelContext, nameExtractor);
-    }
-
-    @Override
-    public void apply(ParameterContext context) {
-        ResolvedMethodParameter parameter = context.resolvedMethodParameter();
-        Class<?> type = parameter.getParameterType().getErasedType();
-        if (type != null && Pageable.class.isAssignableFrom(type)) {
-            Function<ResolvedType, ? extends ModelReference> factory =
-                createModelRefFactory(context);
-
-            ModelReference intModel = factory.apply(resolver.resolve(Integer.TYPE));
-            ModelReference stringModel = factory.apply(resolver.resolve(List.class, String.class));
-
-            List<Parameter> parameters = newArrayList(
-                context.parameterBuilder()
-                    .parameterType("query").name("page").modelRef(intModel)
-                    .description("Page number of the requested page")
-                    .build(),
-                context.parameterBuilder()
-                    .parameterType("query").name("size").modelRef(intModel)
-                    .description("Size of a page")
-                    .build(),
-                context.parameterBuilder()
-                    .parameterType("query").name("sort").modelRef(stringModel).allowMultiple(true)
-                    .description("Sorting criteria in the format: property(,asc|desc). "
-                        + "Default sort order is ascending. "
-                        + "Multiple sort criteria are supported.")
-                    .build());
-
-            context.getOperationContext().operationBuilder().parameters(parameters);
-        }
-    }
+  }
 
 }

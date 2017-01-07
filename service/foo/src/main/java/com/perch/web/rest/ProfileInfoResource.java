@@ -3,7 +3,9 @@ package com.perch.web.rest;
 import com.perch.config.DefaultProfileUtil;
 import com.perch.config.JHipsterProperties;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -17,43 +19,43 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProfileInfoResource {
 
-    @Inject
-    private Environment env;
+  @Inject
+  private Environment env;
 
-    @Inject
-    private JHipsterProperties jHipsterProperties;
+  @Inject
+  private JHipsterProperties jHipsterProperties;
 
-    @GetMapping("/profile-info")
-    public ProfileInfoResponse getActiveProfiles() {
-        String[] activeProfiles = DefaultProfileUtil.getActiveProfiles(env);
-        return new ProfileInfoResponse(activeProfiles, getRibbonEnv(activeProfiles));
+  @GetMapping("/profile-info")
+  public ProfileInfoResponse getActiveProfiles() {
+    String[] activeProfiles = DefaultProfileUtil.getActiveProfiles(env);
+    return new ProfileInfoResponse(activeProfiles, getRibbonEnv(activeProfiles));
+  }
+
+  private String getRibbonEnv(String[] activeProfiles) {
+    String[] displayOnActiveProfiles = jHipsterProperties.getRibbon().getDisplayOnActiveProfiles();
+
+    if (displayOnActiveProfiles == null) {
+      return null;
     }
 
-    private String getRibbonEnv(String[] activeProfiles) {
-        String[] displayOnActiveProfiles = jHipsterProperties.getRibbon().getDisplayOnActiveProfiles();
+    List<String> ribbonProfiles = new ArrayList<>(Arrays.asList(displayOnActiveProfiles));
+    List<String> springBootProfiles = Arrays.asList(activeProfiles);
+    ribbonProfiles.retainAll(springBootProfiles);
 
-        if (displayOnActiveProfiles == null) {
-            return null;
-        }
-
-        List<String> ribbonProfiles = new ArrayList<>(Arrays.asList(displayOnActiveProfiles));
-        List<String> springBootProfiles = Arrays.asList(activeProfiles);
-        ribbonProfiles.retainAll(springBootProfiles);
-
-        if (ribbonProfiles.size() > 0) {
-            return ribbonProfiles.get(0);
-        }
-        return null;
+    if (ribbonProfiles.size() > 0) {
+      return ribbonProfiles.get(0);
     }
+    return null;
+  }
 
-    class ProfileInfoResponse {
+  class ProfileInfoResponse {
 
-        public String[] activeProfiles;
-        public String ribbonEnv;
+    public String[] activeProfiles;
+    public String ribbonEnv;
 
-        ProfileInfoResponse(String[] activeProfiles, String ribbonEnv) {
-            this.activeProfiles = activeProfiles;
-            this.ribbonEnv = ribbonEnv;
-        }
+    ProfileInfoResponse(String[] activeProfiles, String ribbonEnv) {
+      this.activeProfiles = activeProfiles;
+      this.ribbonEnv = ribbonEnv;
     }
+  }
 }

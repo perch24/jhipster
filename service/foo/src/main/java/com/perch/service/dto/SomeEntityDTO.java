@@ -1,6 +1,6 @@
 package com.perch.service.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,53 +10,54 @@ import java.util.Objects;
  */
 public class SomeEntityDTO implements Serializable {
 
-    private String id;
+  private String id;
 
-    @NotNull
-    private String name;
+  @NotNull
+  private String name;
 
 
-    public String getId() {
-        return id;
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
+    SomeEntityDTO someEntityDTO = (SomeEntityDTO) o;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    if (!Objects.equals(id, someEntityDTO.id)) return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    return true;
+  }
 
-        SomeEntityDTO someEntityDTO = (SomeEntityDTO) o;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 
-        if ( ! Objects.equals(id, someEntityDTO.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "SomeEntityDTO{" +
-            "id=" + id +
-            ", name='" + name + "'" +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return "SomeEntityDTO{" +
+      "id=" + id +
+      ", name='" + name + "'" +
+      '}';
+  }
 }

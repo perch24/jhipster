@@ -1,10 +1,9 @@
 package com.perch.repository;
 
 import com.perch.domain.User;
-
-import java.time.ZonedDateTime;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,13 +12,13 @@ import java.util.Optional;
  */
 public interface UserRepository extends MongoRepository<User, String> {
 
-    Optional<User> findOneByActivationKey(String activationKey);
+  Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
+  List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
 
-    Optional<User> findOneByResetKey(String resetKey);
+  Optional<User> findOneByResetKey(String resetKey);
 
-    Optional<User> findOneByEmail(String email);
+  Optional<User> findOneByEmail(String email);
 
-    Optional<User> findOneByLogin(String login);
+  Optional<User> findOneByLogin(String login);
 }

@@ -1,7 +1,6 @@
 package com.perch.repository;
 
 import com.perch.domain.Authority;
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
