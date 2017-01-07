@@ -2,6 +2,17 @@ if (!JavaVersion.current().java8Compatible) {
   throw new GradleException("Gradle must be run with Java 8")
 }
 
-include ':common'
-include ':service:foo'
-include ':service:gateway'
+createModule 'common'
+createModule 'service:foo'
+createModule 'service:gateway'
+
+def createModule(String module) {
+  include module
+
+  def project = project(":${module}")
+  project.buildFileName = "${project.name}.gradle"
+
+  assert project.projectDir.isDirectory()
+  assert project.buildFile.exists()
+  assert project.buildFile.isFile()
+}
