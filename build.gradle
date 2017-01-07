@@ -1,0 +1,157 @@
+import org.gradle.internal.os.OperatingSystem
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.1"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
+        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
+        classpath "com.moowork.gradle:gradle-node-plugin:0.14"
+        classpath "com.moowork.gradle:gradle-gulp-plugin:0.13"
+        classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
+    }
+}
+
+group = 'com.perch'
+version = '0.0.1-SNAPSHOT'
+
+apply from: "${rootDir}/gradle/sonar.gradle"
+
+subprojects {
+  description = "Perch subproject ${project.path}"
+
+  apply plugin: 'java'
+  sourceCompatibility=1.8
+  targetCompatibility=1.8
+
+  apply plugin: 'maven'
+  apply plugin: 'io.spring.dependency-management'
+  apply plugin: 'propdeps'
+  dependencyManagement {
+    imports {
+      mavenBom 'org.springframework.cloud:spring-cloud-dependencies:' + spring_cloud_version
+    }
+  }
+
+  task cleanResources(type: Delete) {
+    delete 'build/resources'
+  }
+
+  if (it.path.startsWith(':service:')) {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'war'
+    apply from: "${rootDir}/gradle/docker.gradle"
+
+    defaultTasks 'bootRun'
+
+    if (OperatingSystem.current().isWindows()) {
+      task pathingJar(type: Jar) {
+        dependsOn configurations.runtime
+        appendix = 'pathing'
+
+        doFirst {
+            manifest {
+                attributes 'Class-Path': configurations.runtime.files.collect {
+                    it.toURL().toString().replaceFirst(/file:\/+/, '/')
+                }.join(' ')
+            }
+        }
+      }
+
+      bootRun {
+          addResources = false
+          dependsOn pathingJar
+          doFirst {
+            classpath = files("$buildDir/classes/main", "$buildDir/resources/main", pathingJar.archivePath)
+          }
+      }
+    } else {
+      bootRun {
+        addResources = false
+      }
+    }
+
+    task stage(dependsOn: 'bootRepackage') {
+    }
+
+//    compileJava.dependsOn processResources
+//    processResources.dependsOn cleanResources,bootBuildInfo
+//    bootBuildInfo.mustRunAfter cleanResources
+  }
+
+  test {
+      include '**/*UnitTest*'
+      include '**/*IntTest*'
+
+      // uncomment if the tests reports are not generated
+      // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+      // ignoreFailures true
+      reports.html.enabled = false
+  }
+
+
+  task cucumberTest(type: Test) {
+      include '**/CucumberTest*'
+
+      // uncomment if the tests reports are not generated
+      // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+      // ignoreFailures true
+      reports.html.enabled = false
+  }
+
+  test.finalizedBy(cucumberTest)
+
+  task testReport(type: TestReport) {
+      destinationDir = file("$buildDir/reports/tests")
+      reportOn test
+      reportOn cucumberTest
+  }
+
+  cucumberTest.finalizedBy(testReport)
+
+  apply from: "${rootDir}/gradle/mapstruct.gradle"
+
+  if (project.hasProperty('shell')) {
+      dependencies {
+          compile "org.springframework.boot:spring-boot-starter-remote-shell"
+      }
+  }
+
+  configurations {
+      providedRuntime
+      compile.exclude module: "spring-boot-starter-tomcat"
+      // netty's native is pulled by spring-cloud-starter-ribbon, but is useless unless you explicitly add the native binary dependency.
+      // Having it in the classpath without the binary can cause warnings
+      all*.exclude group: 'io.netty', module: 'netty-transport-native-epoll'
+  }
+
+  clean {
+    delete "target"
+  }
+}
+
+subprojects {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url 'http://repo.spring.io/milestone' }
+    maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'http://repo.maven.apache.org/maven2' }
+  }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}

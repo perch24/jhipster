@@ -1,13 +1,11 @@
 ######################
 # Project Specific
 ######################
-/src/main/webapp/content/css/main.css
 /build/www/**
 
 ######################
 # Node
 ######################
-bower_components/
 node/
 node_tmp/
 node_modules/
@@ -56,6 +54,7 @@ local.properties
 *.ipr
 *.ids
 *.orig
+out/
 
 ######################
 # Visual Studio Code
@@ -106,9 +105,9 @@ Desktop.ini
 ######################
 # Directories
 ######################
-/build/
-/bin/
-/deploy/
+build/
+bin/
+deploy/
 
 ######################
 # Logs
