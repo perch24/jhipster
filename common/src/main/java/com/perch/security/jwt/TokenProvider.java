@@ -1,6 +1,6 @@
 package com.perch.security.jwt;
 
-import com.perch.config.JHipsterProperties;
+import com.perch.config.CommonProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,7 +33,7 @@ public class TokenProvider {
   private long tokenValidityInMillisecondsForRememberMe;
 
   @Inject
-  private JHipsterProperties jHipsterProperties;
+  private CommonProperties jHipsterProperties;
 
   @PostConstruct
   public void init() {

@@ -1,6 +1,6 @@
 package com.perch.web.filter;
 
-import com.perch.config.JHipsterProperties;
+import com.perch.config.CommonProperties;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +17,9 @@ public class CachingHttpHeadersFilter implements Filter {
 
   private long CACHE_TIME_TO_LIVE = TimeUnit.DAYS.toMillis(1461L);
 
-  private JHipsterProperties jHipsterProperties;
+  private CommonProperties jHipsterProperties;
 
-  public CachingHttpHeadersFilter(JHipsterProperties jHipsterProperties) {
+  public CachingHttpHeadersFilter(CommonProperties jHipsterProperties) {
     this.jHipsterProperties = jHipsterProperties;
   }
 

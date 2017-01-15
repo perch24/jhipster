@@ -29,10 +29,6 @@ task gulpBuildWithOpts(type: GulpTask) {
     args = ["build", "--no-notification"]
 }
 
-war {
-    webAppDirName = 'build/www/'
-}
-
 processResources {
     filesMatching('**/logback-spring.xml') {
         filter {

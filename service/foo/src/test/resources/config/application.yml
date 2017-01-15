@@ -19,7 +19,7 @@ spring:
     data:
         mongodb:
             host: localhost
-            port: 27117
+            port: 27217
             database: foo
     mail:
         host: localhost

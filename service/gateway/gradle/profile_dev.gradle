@@ -17,10 +17,6 @@ bootRun {
     args = []
 }
 
-war {
-    webAppDirName = 'src/main/webapp/'
-}
-
 task gulpConstantDev(type: GulpTask) {
     args = ["ngconstant:dev", "--no-notification"]
 }

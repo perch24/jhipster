@@ -1,0 +1,85 @@
+apply plugin: "io.spring.dependency-management"
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.boot:spring-boot-starter-parent:${spring_boot_version}"
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
+  }
+  dependencies {
+    dependencySet(group: "io.dropwizard.metrics", version: dropwizard_metrics_version) {
+      entry("metrics-core")
+      entry("metrics-graphite")
+      entry("metrics-healthchecks")
+      entry("metrics-jvm")
+      entry("metrics-servlet")
+      entry("metrics-json")
+      entry("metrics-servlets") {
+        exclude "io.dropwizard.metrics:metrics-healthchecks"
+      }
+    }
+
+
+    dependencySet(group: "io.prometheus", version: prometheus_simpleclient_version) {
+      entry "simpleclient"
+      entry "simpleclient_servlet"
+      entry "simpleclient_dropwizard"
+    }
+
+    dependency("net.logstash.logback:logstash-logback-encoder:${logstash_logback_encoder_version}") {
+      exclude(module: "ch.qos.logback")
+    }
+
+    dependencySet(group: "com.fasterxml.jackson.datatype", version: jackson_version) {
+      entry "jackson-datatype-json-org"
+      entry "jackson-datatype-hppc"
+      entry "jackson-datatype-jsr310"
+    }
+
+    dependencySet(group: "com.fasterxml.jackson.core", version: jackson_version) {
+      entry "jackson-annotations"
+      entry "jackson-databind"
+    }
+
+    dependency("com.ryantenney.metrics:metrics-spring:${metrics_spring_version}") {
+      exclude(module: "metrics-core")
+      exclude(module: "metrics-healthchecks")
+    }
+
+    dependency "org.apache.commons:commons-lang3:${commons_lang_version}"
+    dependency "commons-io:commons-io:${commons_io_version}"
+    dependency "javax.inject:javax.inject:${javax_inject_version}"
+    dependency "org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:${geronimo_javamail_1_4_mail_version}"
+
+    dependencySet(group: "org.springframework", version: dependencyManagement.importedProperties["spring.version"]) {
+      entry("spring-context-support") {
+        exclude "org.quartz-scheduler:quartz"
+      }
+    }
+
+    dependency "org.springframework.security:spring-security-config:${spring_security_version}"
+    dependency "org.springframework.security:spring-security-data:${spring_security_version}"
+    dependency "org.springframework.security:spring-security-web:${spring_security_version}"
+    dependency "io.jsonwebtoken:jjwt:${jjwt_version}"
+    dependency "com.github.mongobee:mongobee:${mongobee_version}"
+    dependency("io.springfox:springfox-swagger2:${springfox_version}") {
+      exclude module: "mapstruct"
+    }
+    dependency "io.springfox:springfox-bean-validators:${springfox_version}"
+    dependency "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
+
+    dependency "com.jayway.awaitility:awaitility:${awaility_version}"
+    dependency "info.cukes:cucumber-junit:${cucumber_version}"
+    dependency "info.cukes:cucumber-spring:${cucumber_version}"
+    dependency "org.assertj:assertj-core:${assertj_core_version}"
+
+    dependency "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
+  }
+}
+
+configurations {
+  providedRuntime
+  compile.exclude module: "spring-boot-starter-tomcat"
+  // netty"s native is pulled by spring-cloud-starter-ribbon, but is useless unless you explicitly add the native binary dependency.
+  // Having it in the classpath without the binary can cause warnings
+  all*.exclude group: "io.netty", module: "netty-transport-native-epoll"
+}

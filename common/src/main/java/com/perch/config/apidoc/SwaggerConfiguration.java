@@ -1,7 +1,7 @@
 package com.perch.config.apidoc;
 
+import com.perch.config.CommonProperties;
 import com.perch.config.Constants;
-import com.perch.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,7 @@ public class SwaggerConfiguration {
    * @return the Swagger Springfox configuration
    */
   @Bean
-  public Docket swaggerSpringfoxDocket(JHipsterProperties jHipsterProperties) {
+  public Docket swaggerSpringfoxDocket(CommonProperties jHipsterProperties) {
     log.debug("Starting Swagger");
     StopWatch watch = new StopWatch();
     watch.start();
