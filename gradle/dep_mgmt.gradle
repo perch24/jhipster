@@ -73,6 +73,14 @@ dependencyManagement {
     dependency "org.assertj:assertj-core:${assertj_core_version}"
 
     dependency "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
+
+    dependencySet(group: "com.datastax.cassandra", version: datastax_driver_version) {
+      entry("cassandra-driver-core") {
+        exclude "io.dropwizard.metrics:metrics-core"
+      }
+      entry "cassandra-driver-extras"
+      entry "cassandra-driver-mapping"
+    }
   }
 }
 

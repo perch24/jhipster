@@ -1,0 +1,15 @@
+dependencies {
+  testCompile "com.jayway.awaitility:awaitility:${awaility_version}"
+  testCompile "com.jayway.jsonpath:json-path"
+  testCompile "info.cukes:cucumber-junit:${cucumber_version}"
+  testCompile "info.cukes:cucumber-spring:${cucumber_version}"
+  testCompile "org.springframework.boot:spring-boot-starter-test"
+  testCompile "org.springframework.security:spring-security-test"
+  testCompile "org.springframework.boot:spring-boot-test"
+  testCompile "org.assertj:assertj-core:${assertj_core_version}"
+  testCompile "junit:junit"
+  testCompile "org.mockito:mockito-core"
+  testCompile "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
+  testCompile "org.hamcrest:hamcrest-library"
+  testCompile "com.h2database:h2"
+}

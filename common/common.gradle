@@ -55,5 +55,9 @@ dependencies {
   compile "io.springfox:springfox-bean-validators"
   compile "org.mapstruct:mapstruct-jdk8"
 
+  compile "com.datastax.cassandra:cassandra-driver-core"
+  compile "com.datastax.cassandra:cassandra-driver-extras"
+  compile "com.datastax.cassandra:cassandra-driver-mapping"
+
   optional "org.springframework.boot:spring-boot-configuration-processor"
 }
