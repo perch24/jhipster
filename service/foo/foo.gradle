@@ -1,16 +1,10 @@
 bootRepackage {
-   mainClass = 'com.perch.FooApp'
+  mainClass = 'com.perch.FooApp'
 }
 
 springBoot {
-    mainClass = 'com.perch.FooApp'
-    executable = true
-    buildInfo()
+  mainClass = 'com.perch.FooApp'
 }
-
-compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo
-bootBuildInfo.mustRunAfter cleanResources
 
 if (project.hasProperty('prod')) {
   apply from: "gradle/profile_prod.gradle"
@@ -19,9 +13,9 @@ if (project.hasProperty('prod')) {
 }
 
 dependencies {
-    compile project(":common")
+  compile project(":common")
 
-    optional "org.springframework.boot:spring-boot-configuration-processor"
+  optional "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 apply from: project(':').file("gradle/dep_tests.gradle")

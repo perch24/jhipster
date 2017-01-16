@@ -6,13 +6,7 @@ bootRepackage {
 
 springBoot {
     mainClass = 'com.perch.GatewayApp'
-    executable = true
-    buildInfo()
 }
-
-compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo
-bootBuildInfo.mustRunAfter cleanResources
 
 if (project.hasProperty('prod')) {
   apply from: "gradle/profile_prod.gradle"

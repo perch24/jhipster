@@ -57,6 +57,11 @@ subprojects {
 
     defaultTasks "bootRun"
 
+    springBoot {
+      executable = true
+      buildInfo()
+    }
+
     if (OperatingSystem.current().isWindows()) {
       task pathingJar(type: Jar) {
         dependsOn configurations.runtime
@@ -87,9 +92,9 @@ subprojects {
     task stage(dependsOn: "bootRepackage") {
     }
 
-//    compileJava.dependsOn processResources
-//    processResources.dependsOn cleanResources,bootBuildInfo
-//    bootBuildInfo.mustRunAfter cleanResources
+    compileJava.dependsOn processResources
+    processResources.dependsOn cleanResources,bootBuildInfo
+    bootBuildInfo.mustRunAfter cleanResources
   }
 
   test {
