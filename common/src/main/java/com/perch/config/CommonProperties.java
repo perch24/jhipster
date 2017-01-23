@@ -70,6 +70,8 @@ public class CommonProperties {
 
     private int queueCapacity = 10000;
 
+    private String threadPrefix = null;
+
     public int getCorePoolSize() {
       return corePoolSize;
     }
@@ -92,6 +94,14 @@ public class CommonProperties {
 
     public void setQueueCapacity(int queueCapacity) {
       this.queueCapacity = queueCapacity;
+    }
+
+    public String getThreadPrefix() {
+      return threadPrefix;
+    }
+
+    public void setThreadPrefix(String threadPrefix) {
+      this.threadPrefix = threadPrefix;
     }
   }
 
