@@ -50,7 +50,7 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
   private HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
 
   @Inject
-  private JHipsterProperties jHipsterProperties;
+  private CommonProperties jHipsterProperties;
 
   @Override
   @Bean
@@ -115,7 +115,7 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
     private MetricRegistry metricRegistry;
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
+    private CommonProperties jHipsterProperties;
 
     @PostConstruct
     private void init() {
@@ -145,7 +145,7 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
     private MetricRegistry metricRegistry;
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
+    private CommonProperties jHipsterProperties;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {

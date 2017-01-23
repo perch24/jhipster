@@ -23,17 +23,26 @@ public class AsyncConfiguration implements AsyncConfigurer {
   private final Logger log = LoggerFactory.getLogger(AsyncConfiguration.class);
 
   @Inject
-  private JHipsterProperties jHipsterProperties;
+  private CommonProperties appProperties;
 
   @Override
   @Bean(name = "taskExecutor")
   public Executor getAsyncExecutor() {
     log.debug("Creating Async Task Executor");
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(jHipsterProperties.getAsync().getCorePoolSize());
-    executor.setMaxPoolSize(jHipsterProperties.getAsync().getMaxPoolSize());
-    executor.setQueueCapacity(jHipsterProperties.getAsync().getQueueCapacity());
-    executor.setThreadNamePrefix("foo-Executor-");
+    executor.setCorePoolSize(appProperties.getAsync().getCorePoolSize());
+    executor.setMaxPoolSize(appProperties.getAsync().getMaxPoolSize());
+    executor.setQueueCapacity(appProperties.getAsync().getQueueCapacity());
+    String threadPrefix;
+    if (appProperties.getAsync().getThreadPrefix() != null) {
+      threadPrefix = appProperties.getAsync().getThreadPrefix();
+      if (!threadPrefix.endsWith("-")) {
+        threadPrefix = threadPrefix + "-";
+      }
+    } else {
+      threadPrefix = "async-executor-";
+    }
+    executor.setThreadNamePrefix(threadPrefix);
     return new ExceptionHandlingAsyncTaskExecutor(executor);
   }
 
