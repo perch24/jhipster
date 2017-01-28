@@ -1,23 +1,21 @@
-import org.gradle.internal.os.OperatingSystem
-
 buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        maven { url "http://repo.spring.io/plugins-release" }
-        maven { url "http://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.1"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
-        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
-        classpath "com.moowork.gradle:gradle-node-plugin:0.14"
-        classpath "com.moowork.gradle:gradle-gulp-plugin:0.13"
-        classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
-    }
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url "http://repo.spring.io/plugins-release" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "https://plugins.gradle.org/m2/" }
+  }
+  dependencies {
+    classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.1"
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
+    classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
+    classpath "com.moowork.gradle:gradle-node-plugin:0.14"
+    classpath "com.moowork.gradle:gradle-gulp-plugin:0.13"
+    classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
+  }
 }
 
 group = "com.perch"
@@ -44,84 +42,39 @@ subprojects {
   apply from: project(":").file("gradle/dep_mgmt.gradle")
   apply plugin: "propdeps"
 
-  sourceCompatibility=1.8
-  targetCompatibility=1.8
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 
   task cleanResources(type: Delete) {
     delete "build/resources"
   }
 
-  if (it.path.startsWith(":service:")) {
-    apply plugin: "org.springframework.boot"
-
-    defaultTasks "bootRun"
-
-    springBoot {
-      executable = true
-      buildInfo()
-    }
-
-    if (OperatingSystem.current().isWindows()) {
-      task pathingJar(type: Jar) {
-        dependsOn configurations.runtime
-        appendix = "pathing"
-
-        doFirst {
-            manifest {
-                attributes "Class-Path": configurations.runtime.files.collect {
-                    it.toURL().toString().replaceFirst(/file:\/+/, "/")
-                }.join(" ")
-            }
-        }
-      }
-
-      bootRun {
-          addResources = false
-          dependsOn pathingJar
-          doFirst {
-            classpath = files("$buildDir/classes/main", "$buildDir/resources/main", pathingJar.archivePath)
-          }
-      }
-    } else {
-      bootRun {
-        addResources = false
-      }
-    }
-
-    task stage(dependsOn: "bootRepackage") {
-    }
-
-    compileJava.dependsOn processResources
-    processResources.dependsOn cleanResources,bootBuildInfo
-    bootBuildInfo.mustRunAfter cleanResources
-  }
-
   test {
-      include "**/*UnitTest*"
-      include "**/*IntTest*"
+    include "**/*UnitTest*"
+    include "**/*IntTest*"
 
-      // uncomment if the tests reports are not generated
-      // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-      // ignoreFailures true
-      reports.html.enabled = true
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = true
   }
 
 
   task cucumberTest(type: Test) {
-      include "**/CucumberTest*"
+    include "**/CucumberTest*"
 
-      // uncomment if the tests reports are not generated
-      // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-      // ignoreFailures true
-      reports.html.enabled = true
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = true
   }
 
   test.finalizedBy(cucumberTest)
 
   task testReport(type: TestReport) {
-      destinationDir = file("$buildDir/reports/tests")
-      reportOn test
-      reportOn cucumberTest
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+    reportOn cucumberTest
   }
 
   cucumberTest.finalizedBy(testReport)
@@ -129,12 +82,10 @@ subprojects {
   apply from: project(":").file("gradle/mapstruct.gradle")
 
   if (project.hasProperty("shell")) {
-      dependencies {
-          compile "org.springframework.boot:spring-boot-starter-remote-shell"
-      }
+    dependencies {
+      compile "org.springframework.boot:spring-boot-starter-remote-shell"
+    }
   }
-
-
 
   clean {
     delete "target"
@@ -142,5 +93,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "3.3"
+  gradleVersion = "3.3"
 }

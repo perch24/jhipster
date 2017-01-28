@@ -1,0 +1,61 @@
+subprojects {
+  apply plugin: "org.springframework.boot"
+  apply plugin: "war"
+
+  defaultTasks "bootRun"
+
+  springBoot {
+    executable = true
+    buildInfo()
+  }
+
+  war {
+
+  }
+
+  dependencies {
+    compile "org.apache.commons:commons-vfs2"
+  }
+
+  if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+    task pathingJar(type: Jar) {
+      dependsOn configurations.runtime
+      appendix = "pathing"
+
+      doFirst {
+        manifest {
+          attributes "Class-Path": configurations.runtime.files.collect {
+            it.toURL().toString().replaceFirst(/file:\/+/, "/")
+          }.join(" ")
+        }
+      }
+    }
+
+    bootRun {
+      addResources = false
+      dependsOn pathingJar
+      doFirst {
+        classpath = files("$buildDir/classes/main", "$buildDir/resources/main", pathingJar.archivePath)
+      }
+    }
+  } else {
+    bootRun {
+      addResources = false
+    }
+  }
+
+  configurations {
+    providedRuntime
+    compile.exclude module: "spring-boot-starter-tomcat"
+    // netty"s native is pulled by spring-cloud-starter-ribbon, but is useless unless you explicitly add the native binary dependency.
+    // Having it in the classpath without the binary can cause warnings
+    all*.exclude group: "io.netty", module: "netty-transport-native-epoll"
+  }
+
+  task stage(dependsOn: "bootRepackage") {
+  }
+
+  compileJava.dependsOn processResources
+  processResources.dependsOn cleanResources, bootBuildInfo
+  bootBuildInfo.mustRunAfter cleanResources
+}

@@ -1,6 +1,7 @@
 package com.perch.config;
 
 import com.github.mongobee.Mongobee;
+import com.mongodb.MongoClient;
 import com.perch.domain.util.JSR310DateConverters.DateToZonedDateTimeConverter;
 import com.perch.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 import org.slf4j.Logger;

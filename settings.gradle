@@ -3,6 +3,7 @@ if (!JavaVersion.current().java8Compatible) {
 }
 
 createModule 'common'
+createModule 'service'
 createModule 'service:foo'
 createModule 'service:gateway'
 
