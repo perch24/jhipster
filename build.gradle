@@ -53,7 +53,6 @@ subprojects {
 
   if (it.path.startsWith(":service:")) {
     apply plugin: "org.springframework.boot"
-    apply from: project(":").file("gradle/docker.gradle")
 
     defaultTasks "bootRun"
 
