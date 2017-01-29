@@ -1,5 +1,7 @@
 {
   "config": {
-    
+    "languages": [
+      "en"
+    ]
   }
 }

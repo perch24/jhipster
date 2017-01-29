@@ -4,8 +4,11 @@
 
 spring:
     cloud:
+        discovery:
+          enabled: true
         consul:
             config:
+                enabled: true
                 fail-fast: true
                 format: yaml
                 profile-separator: "-"

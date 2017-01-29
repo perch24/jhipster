@@ -77,7 +77,7 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
     if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
       root = new File(prefixPath + "build/www/");
     } else {
-      root = new File(prefixPath + "src/main/webapp/");
+      root = new File(prefixPath + "src/main/resources/static/");
     }
     if (root.exists() && root.isDirectory()) {
       container.setDocumentRoot(root);

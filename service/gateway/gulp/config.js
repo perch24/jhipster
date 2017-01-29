@@ -1,15 +1,15 @@
 'use strict';
 
 module.exports = {
-    app: 'src/main/webapp/',
+    app: 'src/main/resources/static/',
     dist: 'build/www/',
     swaggerDist: 'build/www/swagger-ui/',
     test: 'src/test/javascript/',
-    scss: 'src/main/webapp/scss/',
-    sassSrc: 'src/main/webapp/scss/**/*.{scss,sass}',
-    sassVendor: 'src/main/webapp/scss/vendor.scss',
-    cssDir: 'src/main/webapp/content/css',
-    bower: 'src/main/webapp/bower_components/',
+    scss: 'src/main/resources/static/scss/',
+    sassSrc: 'src/main/resources/static/scss/**/*.{scss,sass}',
+    sassVendor: 'src/main/resources/static/scss/vendor.scss',
+    cssDir: 'src/main/resources/static/content/css',
+    bower: 'src/main/resources/static/bower_components/',
     tmp: 'build/tmp',
     revManifest: 'build/tmp/rev-manifest.json',
     port: 9000,
