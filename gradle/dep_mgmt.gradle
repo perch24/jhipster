@@ -46,7 +46,6 @@ dependencyManagement {
     }
 
     dependency "org.apache.commons:commons-lang3:${commons_lang_version}"
-    dependency "org.apache.commons:commons-vfs2:${commons_vfs2_version}"
     dependency "commons-io:commons-io:${commons_io_version}"
     dependency "javax.inject:javax.inject:${javax_inject_version}"
     dependency "org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:${geronimo_javamail_1_4_mail_version}"

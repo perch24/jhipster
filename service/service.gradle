@@ -8,10 +8,6 @@ subprojects {
     buildInfo()
   }
 
-  dependencies {
-    compile "org.apache.commons:commons-vfs2"
-  }
-
   if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
     task pathingJar(type: Jar) {
       dependsOn configurations.runtime
